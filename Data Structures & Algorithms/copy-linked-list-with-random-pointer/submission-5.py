@@ -1,0 +1,31 @@
+from typing import Optional
+
+
+# Definition for a Node.
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
+
+
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        if not head:
+            return None
+
+        new_head = Node(head.val)
+        old_curr, new_curr = head, new_head
+        old_to_new_node = {None: None, head: new_head}
+
+        while old_curr.next:
+            new_curr.next = Node(old_curr.next.val)
+            old_curr, new_curr = old_curr.next, new_curr.next
+            old_to_new_node[old_curr] = new_curr
+
+        old_curr, new_curr = head, new_head
+        while old_curr:
+            new_curr.random = old_to_new_node[old_curr.random]
+            old_curr, new_curr = old_curr.next, new_curr.next
+
+        return new_head
